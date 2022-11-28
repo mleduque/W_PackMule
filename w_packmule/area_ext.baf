@@ -1,0 +1,21 @@
+IF
+  Global("W_MuleToGAM","GLOBAL",1)
+  !Global("W_MWAIT","GLOBAL",3)
+//  !InActiveArea("W_MULE")
+  !InActiveArea("W_MSUMA")  
+  InActiveArea(Protagonist)
+THEN
+  RESPONSE #100
+    SetGlobal("W_MuleMo","GLOBAL",1)
+    MoveGlobalObjectOffScreen("W_MSUMA",Protagonist)
+    ActionOverride("W_MSUMA",JumpToPoint([1.1]))
+END
+IF
+  Global("w_mmaze","GLOBAL",2)
+  CombatCounter(0)
+  !RealGlobalTimerNotExpired("w_mmazet","GLOBAL")
+THEN
+	RESPONSE #100
+	  SetGlobal("w_mmaze","GLOBAL",0)
+	  ApplySpellRES("W_MFREE","W_MULE")
+END

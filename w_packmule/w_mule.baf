@@ -1,0 +1,291 @@
+// Pack Mule SCRIPT
+IF
+    OnCreation()
+    Global("W_MuleToGAM","GLOBAL",1)
+THEN
+  RESPONSE #100
+    MoveToOffset([1.1])
+END
+
+///////////////////////////////////////////////////////////////////
+// leave buildings
+IF
+    !AreaType(1)
+    !AreaType(32)
+    !AreaCheck("AR4500")
+    !AreaCheck("AR2200")
+    !Global("W_MuleMo","GLOBAL",4)
+THEN
+  RESPONSE #100
+    EscapeArea()
+END
+
+///////////////////////////////////////////////////////////////////
+// stay button
+IF
+    Global("W_MWAIT","GLOBAL",3)
+    Global("W_MSTAY2","LOCALS",0)
+THEN
+  RESPONSE #100
+    ChangeEnemyAlly(Myself,NEUTRAL)
+    SetGlobal("W_MSTAY2","LOCALS",1)
+END
+
+// avoid combat
+IF
+  HP(Myself,1)
+  Global("w_mmaze","GLOBAL",0)
+THEN
+	RESPONSE #100
+     MakeUnselectable(6)
+     RunAwayFrom(LastAttackerOf(Myself),60)
+     SetGlobal("w_mmaze","GLOBAL",1)
+END
+
+IF
+  Global("w_mmaze","GLOBAL",1)
+THEN
+	RESPONSE #100
+	  SetGlobal("w_mmaze","GLOBAL",2)
+	  RealSetGlobalTimer("w_mmazet","GLOBAL",6)
+	  ReallyForceSpellRES("W_MMAZE",Myself)
+END
+
+IF
+  HitBy([ANYONE],CRUSHING)
+  Range(LastAttackerOf(),10)
+  !GlobalTimerNotExpired("W_Mcombat","Locals")
+THEN
+  RESPONSE #50
+    RunAwayFrom(LastAttackerOf(),40)
+  RESPONSE #10
+    AttackReevaluate(LastAttackerOf(),30)
+END
+
+IF
+  HitBy([ANYONE],CRUSHING)
+  !Range(LastAttackerOf(),9)
+  !GlobalTimerNotExpired("W_Mcombat","Locals")
+THEN
+  RESPONSE #100
+    RunAwayFrom(LastAttackerOf(),40)
+END
+
+IF
+  See(NearestEnemyOf())
+  Range(NearestEnemyOf(),10)
+  !GlobalTimerNotExpired("W_Mcombat","Locals")
+THEN
+  RESPONSE #100
+    RunAwayFrom(NearestEnemyOf(),40)
+END
+
+//Move faster if player1 has boots of speed
+
+IF
+  Or(2)
+    CheckStat(Protagonist,1,185)
+    HasItemEquiped("BOOT01",Protagonist)
+  Global("W_MSPEED","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetGlobal("W_MSPEED","LOCALS",1)
+    ApplySpellRES("W_MSPED1",Myself)
+END
+
+IF
+  CheckStat(Protagonist,0,185)
+  !HasItemEquiped("BOOT01",Protagonist)
+  Global("W_MSPEED","LOCALS",1)
+THEN
+  RESPONSE #100
+    SetGlobal("W_MSPEED","LOCALS",0)
+    ApplySpellRES("W_MSPED0",Myself)
+END
+
+// Do once / join party
+IF
+  Global("W_MuleToGAM","GLOBAL",0)
+  Global("W_PackMuleWrangler","GLOBAL",9)
+THEN
+  RESPONSE #100
+    SetGlobal("W_MuleToGAM","GLOBAL",1)
+    SetGlobal("W_MWAIT","GLOBAL",0)
+    ChangeEnemyAlly(Myself,5)
+    MakeGlobal()
+    SetGlobal("W_MSTAY2","LOCALS",0)
+    CreateCreature("W_MSUMA",[1.1],12)
+    ActionOverride(PLAYER1,AddSpecialAbility("%w_add_spell_new%"))
+    ActionOverride("W_MSUMA",MakeGlobal())
+    ApplySpellRES("W_MFOG",Myself)
+    RealSetGlobalTimer("W_TRAWA","LOCALS",25)
+END
+
+// Waiting
+IF
+  ActionListEmpty()
+  RealGlobalTimerExpired("W_TRAWA","LOCALS")
+  GlobalGT("W_MWAIT","GLOBAL",0)
+THEN
+  RESPONSE #100
+    RealSetGlobalTimer("W_TRAWA","LOCALS",20)
+    SpellRES("W_MULE",Myself)
+END
+
+IF
+  ActionListEmpty()
+  GlobalGT("W_MWAIT","GLOBAL",0)
+THEN
+  RESPONSE #100
+END
+
+//Stop following if near party  or too far
+
+IF
+//  GlobalTimerExpired("W_MULET","LOCALS")
+  CombatCounter(0)
+  OR(6)
+    Range(PLAYER1,15)
+    Range(PLAYER2,15)
+    Range(PLAYER3,15)
+    Range(PLAYER4,15)
+    Range(PLAYER5,15)
+    Range(PLAYER6,15)
+  Global("W_MULEfollow","LOCALS",1)
+THEN
+  RESPONSE #100
+    RealSetGlobalTimer("W_TRAWA","LOCALS",20)
+    SetGlobal("W_MULEfollow","LOCALS",0)
+END
+
+//Look for player1 if away from party
+
+IF
+  CombatCounter(0)
+  ActionListEmpty()
+  !Range(PLAYER1,15)
+  !Range(PLAYER2,15)
+  !Range(PLAYER3,15)
+  !Range(PLAYER4,15)
+  !Range(PLAYER5,15)
+  !Range(PLAYER6,15)
+  Range(PLAYER1,50)
+THEN
+  RESPONSE #100
+    SetGlobal("W_MULEfollow","LOCALS",1)
+    MoveToObject(PLAYER1)
+END
+
+IF
+  CombatCounter(0)
+  ActionListEmpty()
+  !Range(PLAYER1,15)
+  !Range(PLAYER2,15)
+  !Range(PLAYER3,15)
+  !Range(PLAYER4,15)
+  !Range(PLAYER5,15)
+  !Range(PLAYER6,15)
+  Range(PLAYER2,50)
+THEN
+  RESPONSE #100
+    SetGlobal("W_MULEfollow","LOCALS",1)
+    MoveToObject(PLAYER2)
+END
+
+IF
+  CombatCounter(0)
+  ActionListEmpty()
+  !Range(PLAYER1,15)
+  !Range(PLAYER2,15)
+  !Range(PLAYER3,15)
+  !Range(PLAYER4,15)
+  !Range(PLAYER5,15)
+  !Range(PLAYER6,15)
+  Range(PLAYER3,50)
+THEN
+  RESPONSE #100
+    SetGlobal("W_MULEfollow","LOCALS",1)
+    MoveToObject(PLAYER3)
+END
+
+IF
+  CombatCounter(0)
+  ActionListEmpty()
+  !Range(PLAYER1,15)
+  !Range(PLAYER2,15)
+  !Range(PLAYER3,15)
+  !Range(PLAYER4,15)
+  !Range(PLAYER5,15)
+  !Range(PLAYER6,15)
+  Range(PLAYER4,50)
+THEN
+  RESPONSE #100
+    SetGlobal("W_MULEfollow","LOCALS",1)
+    MoveToObject(PLAYER4)
+END
+
+IF
+  CombatCounter(0)
+  ActionListEmpty()
+  !Range(PLAYER1,15)
+  !Range(PLAYER2,15)
+  !Range(PLAYER3,15)
+  !Range(PLAYER4,15)
+  !Range(PLAYER5,15)
+  !Range(PLAYER6,15)
+  Range(PLAYER5,50)
+THEN
+  RESPONSE #100
+    SetGlobal("W_MULEfollow","LOCALS",1)
+    MoveToObject(PLAYER5)
+END
+
+IF
+  CombatCounter(0)
+  ActionListEmpty()
+  !Range(PLAYER1,15)
+  !Range(PLAYER2,15)
+  !Range(PLAYER3,15)
+  !Range(PLAYER4,15)
+  !Range(PLAYER5,15)
+  !Range(PLAYER6,15)
+  Range(PLAYER6,50)
+THEN
+  RESPONSE #100
+    SetGlobal("W_MULEfollow","LOCALS",1)
+    MoveToObject(PLAYER6)
+END
+
+IF
+  CombatCounter(0)
+  ActionListEmpty()
+  !Range(PLAYER1,15)
+  !Range(PLAYER2,15)
+  !Range(PLAYER3,15)
+  !Range(PLAYER4,15)
+  !Range(PLAYER5,15)
+  !Range(PLAYER6,15)
+  Range(PLAYER1,70)
+  Global("W_MULEfollow","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetGlobal("W_MULEfollow","LOCALS",1)
+    MoveToObject(PLAYER1)
+END
+
+// Grass
+IF
+  CombatCounter(0)
+  ActionListEmpty()
+  RealGlobalTimerExpired("W_TRAWA","LOCALS")
+THEN
+  RESPONSE #50
+    RealSetGlobalTimer("W_TRAWA","LOCALS",25)
+    PlaySound("w_mread")
+  RESPONSE #50
+    RealSetGlobalTimer("W_TRAWA","LOCALS",25)
+    PlaySound("w_msele")
+  RESPONSE #100
+    RealSetGlobalTimer("W_TRAWA","LOCALS",45)
+    SpellRES("W_MULE",Myself)
+END

@@ -1,0 +1,12 @@
+IF
+  Global("W_MuleToGAM","GLOBAL",0)
+  !Exists("W_MULE")
+  Global("W_PMULE_C","ar4000",0)
+THEN
+  RESPONSE #100
+    SetGlobal("W_PackMuleWrangler","GLOBAL",9)
+    SetGlobal("W_MWAIT","GLOBAL",3)
+    SetGlobal("W_PMULE_C","ar4000",1)
+    CreateCreature("W_MULE",[1136.1727],0)
+    ApplySpellRES("W_MSHAD","W_MULE")
+END

@@ -1,0 +1,20 @@
+//macro zmieniaj¹ce 'resource' w efektach z nazwy czaru kopiowanego na nazwe nadana przez komende ADD_SPELL
+DEFINE_PATCH_MACRO ~w_add_spell~ BEGIN
+    READ_LONG 0x64  "abil_off"
+    READ_SHORT 0x68 "abil_num"
+    READ_LONG  0x6A "fx_off"
+    READ_SHORT 0x70 "fx_num"
+    FOR (index = 0; index < abil_num; index = index + 1) BEGIN
+      READ_SHORT ("%abil_off%" + (0x28 * "%index%") + 0x1e) "abil_fx_num"
+      READ_SHORT ("%abil_off%" + (0x28 * "%index%") + 0x20) "abil_fx_idx"
+      FOR (index2 = 0; index2 < abil_fx_num; index2 = index2 + 1) BEGIN
+        READ_SHORT ("%fx_off%" + (("%abil_fx_idx%" + "%index2%") * 0x30)) "opcode"
+        PATCH_IF ("%opcode%" = 171) OR ("%opcode%" = 172) BEGIN    // if Spell: Give Innate Ability [171] or Spell: Remove Spell [172]
+          READ_ASCII ("%fx_off%" + (("%abil_fx_idx%" + "%index2%") * 0x30) + 0x14) "w_resource" //(0x8) NULL
+          PATCH_IF ("%w_resource%" STRING_COMPARE "%w_add_spell_old%" = 0) BEGIN
+            WRITE_EVALUATED_ASCII  ("%fx_off%" + (("%abil_fx_idx%" + "%index2%") * 0x30) + 0x14) "%w_add_spell_new%" #8
+          END
+        END
+      END
+    END
+END

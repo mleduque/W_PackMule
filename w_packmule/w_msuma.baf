@@ -1,0 +1,23 @@
+IF
+  Global("W_MuleMo","GLOBAL",1)
+  !Global("W_MWAIT","GLOBAL",3)
+  !InActiveArea("W_MULE")
+  Exists("W_MULE")
+  Or(4)
+    AreaType(1)
+    AreaType(32)
+    AreaCheck("AR4500")
+    AreaCheck("AR2200")
+THEN
+  RESPONSE #100
+    MoveGlobalObject("W_MULE",Protagonist)
+    ActionOverride("W_MULE",MoveToOffset([2.3]))
+    SetGlobal("W_MuleMo","GLOBAL",2)
+END
+
+IF
+  Global("W_MuleMo","GLOBAL",1)
+THEN
+    RESPONSE #100
+      SetGlobal("W_MuleMo","GLOBAL",3)
+END

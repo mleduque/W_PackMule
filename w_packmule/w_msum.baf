@@ -1,0 +1,47 @@
+IF
+  InMyArea("W_MULE")
+  !See("W_MULE")
+THEN
+  RESPONSE #100
+    ApplySpellRES("W_MFREE","W_MULE")
+    MoveGlobalObjectOffScreen("W_MULE",Protagonist)
+    ActionOverride("W_MULE",MoveToObject(Protagonist))
+    DestroySelf()
+END
+
+IF
+  Global("W_MuleToGAM","GLOBAL",1)
+  !InMyArea("W_MULE")
+  AreaType(1)
+THEN
+  RESPONSE #100
+    Wait(2)
+//    SetGlobal("W_MuleMo","GLOBAL",4)
+    MoveGlobalObjectOffScreen("W_MULE",Protagonist)
+    ApplySpellRES("W_MFREE","W_MULE")
+    ActionOverride("W_MULE",MoveToObject(Protagonist))
+    DestroySelf()
+END
+
+IF
+  Global("W_MuleToGAM","GLOBAL",1)
+  !InMyArea("W_MULE")
+  !AreaType(1)
+THEN
+  RESPONSE #100
+    Wait(2)
+    SetGlobal("W_MuleMo","GLOBAL",4)
+    MoveGlobalObject("W_MULE",Protagonist)
+    ApplySpellRES("W_MFREE","W_MULE")
+    ActionOverride("W_MULE",MoveToOffset([2.3]))
+    DestroySelf()
+END
+
+
+IF
+  True()
+THEN
+  RESPONSE #100
+    ActionOverride("W_MULE",MoveToObject(Protagonist))
+    DestroySelf()
+END
