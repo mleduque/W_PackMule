@@ -77,7 +77,7 @@ COPY ~w_PackMule/w_mgbag.sto~    ~override/w_mgbag.sto~
 BEGIN @1018
 SUBCOMPONENT @1027
 DESIGNATED 2
-REQUIRE_PREDICATE GAME_IS ~bgee bg2ee eet~ ~bgee bg2ee eet~
+REQUIRE_PREDICATE GAME_IS ~bgee bg2ee eet iwdee~ ~bgee bg2ee eet iwdee~
 INCLUDE ~w_PackMule/lib/w_mule.tpa~
 
 COPY ~w_PackMule/w_msaddl.sto~   ~override/w_msaddl.sto~
@@ -94,7 +94,7 @@ COPY ~w_PackMule/w_mgbag.sto~    ~override/w_mgbag.sto~
 BEGIN @1022
 SUBCOMPONENT @1027
 DESIGNATED 3
-REQUIRE_PREDICATE GAME_IS ~bgee bg2ee eet~ ~bgee bg2ee eet~
+REQUIRE_PREDICATE GAME_IS ~bgee bg2ee eet iwdee~ ~bgee bg2ee eet iwdee~
 INCLUDE ~w_PackMule/lib/w_mule.tpa~
 
 COPY ~w_PackMule/w_msaddl.sto~   ~override/w_msaddl.sto~

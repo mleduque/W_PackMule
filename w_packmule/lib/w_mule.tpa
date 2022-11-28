@@ -62,6 +62,11 @@ ACTION_IF FILE_EXISTS_IN_GAME  ~ar4000.are~
 THEN BEGIN
 EXTEND_BOTTOM ~ar4000.bcs~ ~w_packmule/ar4000_ext.baf~
 END
+//iwdee
+ACTION_IF FILE_EXISTS_IN_GAME  ~ar2100.are~
+THEN BEGIN
+EXTEND_BOTTOM ~ar2100.bcs~ ~w_packmule/ar2100_ext.baf~
+END
 
 
 <<<<<<<< .../script.baf
